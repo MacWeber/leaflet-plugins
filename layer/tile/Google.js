@@ -68,7 +68,8 @@ L.Google = L.TileLayer.extend({
 		this._map._container.removeChild(this._container);
 		//this._container = null;
 
-		this._map.off('viewreset', this._resetCallback, this);
+//		this._map.off('viewreset', this._resetCallback, this);
+		this._map.off('viewreset', this._reset, this);
 
 		this._map.off('move', this._update, this);
 
