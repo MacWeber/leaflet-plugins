@@ -68,7 +68,8 @@ L.Google = L.TileLayer.extend({
 		this._map._container.removeChild(this._container);
 		//this._container = null;
 
-		this._map.off('viewreset', this._resetCallback, this);
+//		this._map.off('viewreset', this._resetCallback, this);
+		this._map.off('viewreset', this._reset, this);
 
 		this._map.off('move', this._update, this);
 
@@ -91,30 +92,36 @@ L.Google = L.TileLayer.extend({
 	},
 
 	_moveGoogleAttribution: function() {
-		// Get the Google attribution elements.
-		var googleAttribution = document.getElementsByClassName('gmnoprint');
 
-		// Builds the attribution text.
-		var attribution = ' | ';
-		attribution += googleAttribution[0].outerHTML + ' - ';
-		attribution += googleAttribution[1].outerHTML;
+        // check if no attributionControl present in leaflet map
+        if (this.lmap.attributionControl !== undefined) {
 
-		// Modify some styles.
-		var sheet = document.createElement('style');
-		sheet.innerHTML = ".gmnoprint {position: inherit !important; display: inline-block; right: 0 !important;}";
-		sheet.innerHTML += ".gm-style-cc div:first-child {opacity: 0 !important;}";
-		document.body.appendChild(sheet);
+            // Get the Google attribution elements.
+            var googleAttribution = document.getElementsByClassName('gmnoprint');
 
-		// Removes old attribution.
-		googleAttribution[0].parentNode.removeChild(googleAttribution[0]);
-		googleAttribution[0].parentNode.removeChild(googleAttribution[0]);
+            // Builds the attribution text.
+            var attribution = ' | ';
+            attribution += googleAttribution[0].outerHTML + ' - ';
+            attribution += googleAttribution[1].outerHTML;
 
-		// Adds to Leaflet Attribution Control.
-		this.lmap.attributionControl.addAttribution(attribution);
-		// Saves the attribution to be sent to options.
-		this.leafletAttribution = attribution;
+            // Modify some styles.
+            var sheet = document.createElement('style');
+            sheet.innerHTML = ".gmnoprint {position: inherit !important; display: inline-block; right: 0 !important;}";
+            sheet.innerHTML += ".gm-style-cc div:first-child {opacity: 0 !important;}";
+            document.body.appendChild(sheet);
 
-		delete this.lmap;
+            // Removes old attribution.
+            googleAttribution[0].parentNode.removeChild(googleAttribution[0]);
+            googleAttribution[0].parentNode.removeChild(googleAttribution[0]);
+
+            // Adds to Leaflet Attribution Control.
+            this.lmap.attributionControl.addAttribution(attribution);
+            // Saves the attribution to be sent to options.
+            this.leafletAttribution = attribution;
+
+        }
+
+        delete this.lmap;
 	},
 
 	setOpacity: function(opacity) {
